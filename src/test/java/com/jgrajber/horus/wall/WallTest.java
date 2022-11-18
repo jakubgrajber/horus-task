@@ -26,19 +26,20 @@ class WallTest {
 
 
     static final List<Block> BLOCK_LIST = List.of(
-            new BlockImpl(COLOR_BLUE, MATERIAL_STONE),
-            new BlockImpl(COLOR_BLUE, MATERIAL_WOOD),
-            new BlockImpl(COLOR_RED, MATERIAL_STONE),
-            new BlockImpl(COLOR_RED, MATERIAL_WOOD),
-            new BlockImpl(COLOR_RED, MATERIAL_STONE),
-            new CompositeBlockImpl(new BlockImpl(COLOR_BLACK, MATERIAL_PLASTIC), 5),
-            new CompositeBlockImpl(new BlockImpl(COLOR_BLUE, MATERIAL_STONE), 7)
-    );
+            new CompositeBlockImpl(List.of(
+                    new CompositeBlockImpl(List.of(
+                            new BlockImpl(COLOR_BLUE, MATERIAL_STONE),
+                            new BlockImpl(COLOR_RED, MATERIAL_WOOD)
+                    ), COLOR_BLACK, MATERIAL_PLASTIC),
+                    new CompositeBlockImpl(List.of(
+                            new BlockImpl(COLOR_BLACK, MATERIAL_WOOD)
+                    ), COLOR_BLACK, MATERIAL_WOOD)
+            ), COLOR_RED, MATERIAL_STONE));
 
     static final Wall wall = new Wall(BLOCK_LIST);
-    static final int NUMBER_OF_BLOCKS = 17;
+    static final int NUMBER_OF_BLOCKS = 6;
     static final int ZERO = 0;
-    static final int NUMBER_OF_STONE_BLOCKS = 10;
+    static final int NUMBER_OF_STONE_BLOCKS = 2;
 
     @Test
     @DisplayName("Returns any block with given colour")

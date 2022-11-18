@@ -9,14 +9,10 @@ public class CompositeBlockImpl implements CompositeBlock {
     private final String color;
     private final String material;
 
-    public CompositeBlockImpl(Block block, int amount) {
-        blocks = new ArrayList<>();
-
-        for (int i = 0; i < amount; i++) {
-            blocks.add(new BlockImpl(block));
-        }
-        this.color = block.getColor();
-        this.material = block.getMaterial();
+    public CompositeBlockImpl(List<Block> block, String color, String material) {
+        blocks = block;
+        this.color = color;
+        this.material = material;
     }
 
     @Override
