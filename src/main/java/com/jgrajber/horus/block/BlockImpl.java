@@ -10,11 +10,6 @@ public class BlockImpl implements Block {
         this.material = material;
     }
 
-    public BlockImpl(Block block) {
-        this.color = block.getColor();
-        this.material = block.getMaterial();
-    }
-
     @Override
     public String getColor() {
         return color;

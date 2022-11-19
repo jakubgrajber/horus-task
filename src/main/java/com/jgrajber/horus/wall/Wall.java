@@ -3,7 +3,6 @@ package com.jgrajber.horus.wall;
 import com.jgrajber.horus.block.Block;
 import com.jgrajber.horus.block.CompositeBlock;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,49 +18,39 @@ public class Wall implements Structure {
 
     @Override
     public Optional<Block> findBlockByColor(String color) {
-        return streamOfUnboxedBlocks()
+        return flattenedBlocks()
                 .filter(block -> block.getColor().equalsIgnoreCase(color))
                 .findAny();
     }
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
-        return streamOfUnboxedBlocks()
+        return flattenedBlocks()
                 .filter(block -> block.getMaterial().equalsIgnoreCase(material))
                 .collect(Collectors.toList());
     }
 
     @Override
     public int count() {
-        return streamOfUnboxedBlocks().toList().size();
+        return flattenedBlocks().toList().size();
     }
 
-    private Stream<Block> streamOfUnboxedBlocks() {
-
-        return blocks.stream().flatMap(block -> {
-            if (block instanceof CompositeBlock compositeBlock) {
-                return unboxCompositeBlock(compositeBlock).stream();
-            } else {
-                return Stream.of(block);
-            }
-        });
+    private Stream<Block> flattenedBlocks() {
+        return blocks.stream().flatMap(this::streamOfBlock);
     }
 
-    private List<Block> unboxCompositeBlock(CompositeBlock compositeBlock) {
-
-        List<Block> result = new ArrayList<>();
-        result.add(compositeBlock);
-
-        List<Block> innerBlocks = compositeBlock.getBlocks();
-
-        for (var block : innerBlocks) {
-            if (block instanceof CompositeBlock cb) {
-                result.addAll(unboxCompositeBlock(cb));
-            } else {
-                result.add(block);
-            }
+    private Stream<Block> streamOfBlock(Block block) {
+        if (block instanceof CompositeBlock cb) {
+            return unboxCompositeBlock(cb);
+        } else {
+            return Stream.of(block);
         }
+    }
 
-        return result;
+    private Stream<Block> unboxCompositeBlock(CompositeBlock compositeBlock) {
+        return Stream.concat(
+                Stream.of(compositeBlock),
+                compositeBlock.getBlocks().stream()
+                        .flatMap(this::streamOfBlock));
     }
 }
